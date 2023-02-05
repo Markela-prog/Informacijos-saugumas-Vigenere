@@ -30,21 +30,25 @@ namespace VigenereCipher
         {
             string encryptedText = "";
             int j = 0;
-           
             
             for (int i = 0; i < text.Length; i++)
             {
                 int x;
-                int tmp = text[i] + key[j];
-                if(tmp > 126)
+                int tmp = text[i];
+                
+                if (tmp >= 32 && tmp <= 126)
                 {
-                    tmp -= 95;
-                    x = tmp % 127;
+                    x = (tmp + key[j] - 64) % 95;
+                    if (x < 0)
+                        x += 95;
+                    encryptedText += (char)(x + 32);
+                    j++;
                 }
-                else { x = tmp%127; }
 
-                encryptedText += (char)x;
-                j = (j + 1) % key.Length;
+                else
+                    encryptedText += (char)tmp;
+
+
             }
             return encryptedText;
         }
@@ -57,24 +61,22 @@ namespace VigenereCipher
             for (int i = 0; i < text.Length; i++)
             {
                 int x;
-                int tmp = (text[i] - key[j]);
-                if (tmp < 32)
+
+                int tmp = text[i];
+                if (tmp >= 32 && tmp <= 126)
                 {
-                    tmp += 95;
-                    x = tmp % 127;
+                    x = (tmp - key[j] + 95) % 95;
+                    if (x < 0)
+                        x += 95;
+                    decryptedText += (char)(x + 32);
+                    j++;
                 }
 
-
                 else
-                    x = tmp % 127;
-                
+                    decryptedText += (char)tmp;
 
-                decryptedText += (char)x;
-                j = (j + 1) % key.Length;
             }
             return decryptedText;
-            
-
 
         }
 
